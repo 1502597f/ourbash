@@ -1,0 +1,11 @@
+#! /bin/bash
+
+clear
+printf "Checking for days until accounts deactivates \n"
+if useradd -D | grep INACTIVE=35 >/dev/null; then
+	printf "\033[33;32m PASS \n"
+else
+	printf "\033[33;31m FAIL \n"
+fi 
+
+echo  -en "\e[0m"
