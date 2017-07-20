@@ -1,0 +1,23 @@
+#! /bin/bash
+
+clear
+printf "Checks no Legacy Entries exist in etc/passwd, /etc/shadow and /etc/group files"
+
+PASSWD=$(grep '^+:' /etc/passwd)
+SHADOW=$(grep '^+:' /etc/shadow)
+GROUP=$(grep '^+:' /etc/group)
+
+
+
+#echo $PASSWD
+#echo $SHADOW
+#echo $GROUP
+
+if [ -z "$PASSWD" ] && [ -z "$SHADOW" ] && [ -z "$GROUP" ]; then
+echo 	
+	printf "\033[33;32m PASS \n"
+else
+	printf "\033[33;31m FAIL \n"
+fi 
+
+echo  -en "\e[0m"
