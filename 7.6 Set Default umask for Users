@@ -1,0 +1,12 @@
+#! /bin/bash
+
+printf "Checking umask for users... \n "
+
+if  grep "umask 077" /etc/bashrc | grep "umask 077" /etc/profile.d/* >/dev/null ;
+then
+	printf "\033[33;32mPASSED, umask is already set to 077. \n"
+else
+	printf "\033[33;31mFAILED, please set umask to 077. \n"
+fi 
+
+echo  -en "\e[0m"
