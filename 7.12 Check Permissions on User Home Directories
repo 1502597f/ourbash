@@ -1,0 +1,33 @@
+#! /bin/bash
+clear 
+echo "7.12 Check Permissions on User Home Directories " 
+
+for RESULT in `cat /etc/passwd | egrep -v '(root|halt|sync|shutdown)' |awk -F: '($7!="/usr/sbin/nologin" && $7!="/sbin/nologin" && $7!="/bin/false") { print $6 }'`; do
+resultperm=$(ls -ld $RESULT)
+
+
+if [[ ` echo $resultperm | grep "^......w..." ` ]]; then 
+echo "Fail, Group Write permission is set on directory $RESULT"
+else
+echo "Pass, Group Write permission is not set on directory $RESULT"
+fi
+
+if [[ ` echo $resultperm | grep "^.......-.." `  ]]; then
+echo "Pass, Other Read permission is not set on directory $RESULT"
+else 
+echo "Fail, Other Read permission is set on directory $RESULT"
+fi
+
+if [[ `echo $resultperm | grep "^........-."` ]]; then
+echo "Pass, Other Write permission is not set on directory $RESULT"
+else
+echo "Fail, Other Write permission is set on directory $RESULT"
+fi
+
+if [[ `echo $resultperm | grep "^.........-"` ]]; then
+echo "Pass, Other Execute permission is not set on directory $RESULT"
+else
+echo "Fail, Other Execute permission is set on directory $RESULT"
+fi
+done
+
