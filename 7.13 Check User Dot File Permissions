@@ -1,0 +1,22 @@
+#! /bin/bash
+clear
+printf "Checking user dot file permissions\n"
+counter=0
+for dir in `cat /etc/passwd | egrep -v '(root|sync|halt|shutdown)' | awk -F: '($7 != "/sbin/nologin" && $7 != "/usr/sbin/nologin" && $7 != "/bin/false") { print $6 }'`; do
+for file in $dir/.[A-Za-z0-9]*; do
+perm6=$(ls -ld $file | grep "^.....w....")
+perm9=$(ls -ld $file | grep "^........w.")
+
+if [ -z "$perm6" ] && [ -z "$perm9" ]; then
+	counter=$counter
+else
+	counter=$((counter+1))
+fi
+done
+done
+if [ $counter == 0 ]; then
+	printf "\e[32mPass\e[0m\n"
+else
+	printf "\e[31mFail\e[0m\n"
+	printf "Please run remediation\n"
+fi
