@@ -1,0 +1,20 @@
+#!/bin/bash
+clear
+printf "Checking for duplicate GIDs\n"
+counter=0
+cat /etc/group | cut -f3 -d":" | sort -n | uniq -c | while read x ; do
+[ -z "${x}" ] && break
+set - $x
+if [ $1 -gt 1 ]; then
+	grps=`/bin/gawk -F: '($3 == n) { print $1 }' n=$2 /etc/group | /usr/bin/xargs`
+	echo "Duplicate GID ($2): ${grps}"
+else
+	counter=$((counter+1))
+fi
+done
+if [ $counter > 0 ]; then
+	printf "\e[32mPass\e[0m\n"
+else
+	printf "\e[31mFail\e[0m\n"
+	printf "Please run remediation\n"
+fi
