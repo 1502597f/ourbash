@@ -5,7 +5,7 @@ printf "7.1 Set Password Expiration Days\n"
 printf "Checking user account defaults: (Password Max Days)\n"
 maxDays=$(grep ^PASS_MAX_DAYS /etc/login.defs | grep -o '[0-9]*')
 if [ $maxDays -le 90 ]; then
-  printf "\e[32mPass\e[0m\n"
+	printf "\e[32mPass\e[0m\n"
 else
 	printf "\e[31mFail\e[0m\n"
 	printf "Please run remediation\n"
