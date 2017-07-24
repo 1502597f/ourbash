@@ -1,0 +1,12 @@
+#!/bin/bash
+clear 
+
+echo "7.23 Check for Presence of User .forward Files"
+
+for dir in `/bin/cat /etc/passwd| /bin/awk -F: '{ print $6 }'`; do
+if [ ! -h "$dir/.forward" -a -f "$dir/.forward" ]; then
+echo ".forward file $dir/.forward exists"
+else 
+printf "\e[32mPASS\e[0m\n"
+fi
+done
