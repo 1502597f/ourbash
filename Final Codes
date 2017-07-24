@@ -381,10 +381,11 @@ cat /etc/passwd | cut -f1 -d":" | /bin/sort -n | /usr/bin/uniq -c | while read x
 [ -z "${x}" ] && break
 set - $x
 if [ $1 -gt 1 ]; then
-uids=`/bin/gawk -F: '($1 == n) { print $3 }' n=$2 \/etc/passwd | xargs` 
-echo "Duplicate User Name ($2): ${uids}"
+uids=`/bin/gawk -F: '($1 == n) { print $3 }' n=$2 \/etc/passwd | xargs`
+printf "\e[31mFail - Duplicate User Name ($2)\e[0m\n"
+printf "Please run remediation"
 else
-  printf "\e[32mPASS. There are no duplicate user names. \e[0m\n"
+printf "\e[32mPass - ($2)\e[0m\n"
 fi
 done
 
@@ -395,9 +396,10 @@ cat /etc/group | cut -f1 -d":" | /bin/sort -n | /usr/bin/uniq -c | while read x 
 set - $x
 if [ $1 -gt 1 ]; then
 gids=`/bin/gawk -F: '($1 == n) { print $3 }' n=$2 /etc/group | xargs`
-echo "Duplicate Group Name ($2): ${gids}"
+printf "\e[31mFail - Duplicate Group Name ($2)\e[0m\n"
+printf "Please run remediation"
 else 
-printf "\e[32mPASS\e[0m\n"
+printf "\e[32mPass - ($2)\e[0m\n"
 fi
 done
 
@@ -407,6 +409,6 @@ for dir in `/bin/cat /etc/passwd| /bin/awk -F: '{ print $6 }'`; do
 if [ ! -h "$dir/.forward" -a -f "$dir/.forward" ]; then
 echo ".forward file $dir/.forward exists"
 else 
-printf "\e[32mPASS\e[0m\n"
+printf "\e[32mPass - $dir\e[0m\n"
 fi
 done
