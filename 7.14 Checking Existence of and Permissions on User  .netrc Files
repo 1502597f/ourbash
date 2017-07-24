@@ -1,6 +1,6 @@
 #! /bin/bash
 
-printf "\033[0;30m Checkiing Permissions on User .netrc Files \n" 
+printf "\033[0;30m Checking Permissions on User .netrc Files \n" 
 
 for dir in `/bin/cat /etc/passwd | /bin/egrep -v '(root|sync|halt|shutdown)' |/bin/awk -F: '($7 != "/sbin/nologin") { print $6 }'`; do
 
