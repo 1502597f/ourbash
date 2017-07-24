@@ -1,0 +1,47 @@
+#!/bin/bash
+clear
+printf "Checking root path integrity\n"
+
+if [ "`echo $PATH | grep :: `" != "" ]; then
+	echo "Empty Directory in PATH (::)"
+fi
+
+p=`echo $PATH | sed -e 's/::/:/' -e 's/:$//' -e 's/:/ /g'`
+set -- $p
+while [ "$1" != "" ]; do
+	if [ "$1" = "." ]; then
+		echo "PATH contains ."
+		shift
+		continue
+	fi
+
+	if [ -d $1 ]; then
+		perm6=$(ls -ldH $1 | grep "^.....w....")
+		perm9=$(ls -ldH $1 | grep "^........w.")
+
+		if [ -z "$perm6" ]; then
+			printf "\e[32mGroup Write permission not set on directory $1\e[0m\n"
+		else
+			printf "\e[31mGroup Write permission set on directory $1\e[0m\n"
+			printf "Please run remediation\n"
+		fi
+
+		if [ -z "$perm9" ]; then
+			printf "\e[32mOther Write permission not set on directory $1\e[0m\n"
+		else
+			printf "\e[31mOther Write permission set on directory $1\e[0m\n"
+			printf "Please run remediation\n"
+		fi
+
+		dirown=`ls -ldH $1 | awk '{print $3}'`
+		if [ "$dirown" == "root" ] ; then
+			printf "\e[32m$1 is owned by root\e[0m\n\n"
+		else
+			printf "\e[31m$1 is not owned by root\e[0m\n"
+			printf "Please run remediation\n\n"
+		fi
+	else
+		printf "\e[31m$1 is not a directory\e[0m\n"
+	fi
+shift
+done
