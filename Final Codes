@@ -120,7 +120,6 @@ printf "Checking that password fields are not empty"
 PFieldsNEmpty= $(cat /etc/shadow | awk -F: '($2 == "" ) { print $1 " does not have a password "}')
 echo $PFieldsNEmpty
 if [ -z "$PFieldsNEmpty" ]; then
-echo 	
 	printf "\033[33;32m PASS \n"
 else
 	printf "\033[33;31m FAIL \n"
@@ -137,7 +136,6 @@ GROUP=$(grep '^+:' /etc/group)
 #echo $SHADOW
 #echo $GROUP
 if [ -z "$PASSWD" ] && [ -z "$SHADOW" ] && [ -z "$GROUP" ]; then
-echo 	
 	printf "\033[33;32m PASS \n"
 else
 	printf "\033[33;31m FAIL \n"
