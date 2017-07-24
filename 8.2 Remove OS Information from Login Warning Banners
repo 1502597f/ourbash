@@ -1,0 +1,56 @@
+#!/bin/bash
+
+clear
+printf "Remove OS information from Login Banners\n"
+issue=$(egrep '(\\v|\\r|\\m|\\s)' /etc/issue)
+motd=$(egrep '(\\v|\\r|\\m|\\s)' /etc/motd)
+issuenet=$(egrep '(\\v|\\r|\\m|\\s)' /etc/issue.net)
+
+regex='(\\v|\\r|\\m|\\s)'
+counter=0
+
+#echo $issue
+printf "Checking /etc/issue:\n"
+if [[ $issue =~ $regex ]]
+then 
+	counter=$((counter+1))
+	printf "\033[33;31m FAIL \n"
+else
+	printf "\033[33;32m PASS \n"
+fi
+
+echo  -en "\e[0m"
+
+#echo $motd
+printf "Checking /etc/motd:\n"
+if [[ $motd =~ $regex ]]
+then 
+	counter=$((counter+1))
+	printf "\033[33;31m FAIL \n"
+else
+	printf "\033[33;32m PASS \n"
+
+fi
+
+echo  -en "\e[0m"
+
+#echo $issuenet
+printf "Checking /etc/issue.net:\n"
+if [[ $issuenet =~ $regex ]]
+then 
+	counter=$((counter+1))
+	printf "\033[33;31m FAIL \n"
+else
+	printf "\033[33;32m PASS \n"
+
+fi
+
+echo  -en "\e[0m"
+#echo $counter 
+
+if [ $counter > 0 ]; then
+	printf "\e[31mOverall Fail\e[0m\n"
+	printf "Please run remediation\n"
+else
+	printf "\e[32mOverall Pass\e[0m\n"
+fi
