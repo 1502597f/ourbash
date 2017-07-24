@@ -46,7 +46,7 @@ else
 fi
 
 echo  -en "\e[0m"
-echo $counter 
+#echo $counter 
 
 if [ $counter -gt 0 ]; then
 	printf "\e[31mOverall Fail\e[0m\n"
