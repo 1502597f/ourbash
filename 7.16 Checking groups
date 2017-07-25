@@ -11,7 +11,7 @@ grep -q -P "^.*?:x:$i:" /etc/group
 if [ $? -ne 0 ]; then 
 echo "Group $i is referenced by /etc/passwd but does not exists in /etc/group"
 else
-printf "\e[32mPass\e[0m\n"
+printf "\e[32mPass - Group: $i\e[0m\n"
 fi
 
 done
