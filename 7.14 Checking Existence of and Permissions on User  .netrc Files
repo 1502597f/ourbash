@@ -19,7 +19,7 @@ fi
 if [ ! -h "$file" -a -f "$file" ]; then
 fileperm=`/bin/ls -ld $file | /bin/cut -f1 -d" "`
 
-#Checks the permission granted to Group Read (5th Character) 
+#Checks the permission granted of Group Read (5th Character) 
 if [ `echo $fileperm | /bin/cut -c5 ` != "-" ]
 then
 printf "\033[33;32m Group Read set on $file. \n"
@@ -27,7 +27,7 @@ else
 printf "\033[33;31m Group Read not set on $file. \n"
 fi
 
-#Checks the permission granted to Group Write (6th Character) 
+#Checks the permission granted of Group Write (6th Character) 
 if [ `echo $fileperm | /bin/cut -c6 ` != "-" ]
 then
 printf "\033[33;32m Group Write set on $file. \n"
@@ -35,7 +35,7 @@ else
 printf "\033[33;31m Group Write not set on $file. \n"
 fi
 
-#Checks the permission granted to Group Execute (7th Character) 
+#Checks the permission granted of Group Execute (7th Character) 
 if [ `echo $fileperm | /bin/cut -c7 ` != "-" ]
 then
 printf "\033[33;32m Group Execute set on $file. \n"
@@ -43,7 +43,7 @@ else
 printf "\033[33;31m Group Execute not set on $file. \n"
 fi
 
-#Checks the permission granted to Others Read (8th Character) 
+#Checks the permission granted of Others Read (8th Character) 
 if [ `echo $fileperm | /bin/cut -c8 ` != "-" ]
 then
 printf "\033[33;32m Others Read set on $file. \n"
@@ -51,7 +51,7 @@ else
 printf "\033[33;31m Others Read not set on $file. \n"
 fi
 
-#Checks the permission granted to Others Write (9th Character) 
+#Checks the permission granted of Others Write (9th Character) 
 if [ `echo $fileperm | /bin/cut -c9 ` != "-" ]
 then
 printf "\033[33;32m Others Write set on $file. \n"
@@ -59,7 +59,7 @@ else
 printf "\033[33;31m Others Write not set on $file. \n"
 fi
 
-#Checks the permission granted to Others Execute (10th Character) 
+#Checks the permission granted of Others Execute (10th Character) 
 if [ `echo $fileperm | /bin/cut -c10 ` != "-" ]
 then
 printf "\033[33;32m Others Execute set on $file. \n"
