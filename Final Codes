@@ -412,3 +412,99 @@ else
 printf "\e[32mPass - $dir\e[0m\n"
 fi
 done
+
+
+printf "\n8.1 Set Warning Banner for Standard Login Services\n"
+counter=0
+motdper=$(ls -l /etc/motd | cut -d " " -f 3 )
+motdper1=$(ls -l /etc/motd | cut -d " " -f 4 )
+issueper=$(ls -l /etc/issue | cut -d " " -f 3 )
+issueper1=$(ls -l /etc/issue | cut -d " " -f 4 )
+issuenetper=$(ls -l /etc/issue.net | cut -d " " -f 3 )
+issuenetper1=$(ls -l /etc/issue.net | cut -d " " -f 4 )
+printf "Checking that /etc/motd /etc/issue /etc/issue.net have root as user and group:\n"
+if [ "$motdper" == "root" ] && [ "$motdper1" == "root" ] && [ "$issueper" == "root" ] && [ "$issueper1" == "root" ] && [ "$issuenetper" == "root" ] && [ "$issuenetper1" == "root" ]
+then 
+	printf "\033[33;32m PASS \n"
+else
+	counter=$((counter+1))
+	printf "\033[33;31m FAIL \n"
+
+fi
+echo  -en "\e[0m"
+chmodmotd=$( stat --format '%a' /etc/motd)
+chmodissue=$( stat --format '%a' /etc/issue)
+chmodissuenet=$( stat --format '%a' /etc/issue.net)
+printf "Checking that /etc/motd /etc/issue /etc/issue.net have chmod of 644 :\n"
+if [ "$chmodmotd" -eq 644 ] && [ "$chmodissue" -eq 644 ] && [ "$chmodissuenet" -eq 644 ]
+then 
+	printf "\033[33;32m PASS \n"
+else	
+	counter=$((counter+1))
+	printf "\033[33;31m FAIL \n"
+fi
+echo  -en "\e[0m"
+mp="Authorized uses only. All activity may be \ monitored and reported."
+catissue=$(cat /etc/issue)
+catissuenet=$(cat /etc/issue.net)
+printf "Checking that /etc/issue /etc/issue.net have proper motd :\n"
+if [ "$catissue" == "$mp" ] && [ "$catissuenet" == "$mp" ]
+then
+	printf "\033[33;32m PASS \n"
+else
+	counter=$((counter+1))
+	printf "\033[33;31m FAIL \n"
+fi
+echo  -en "\e[0m"
+if [ $counter -gt 0 ]; then
+	printf "\e[31mOverall Fail\e[0m\n"
+	printf "Please run remediation\n"
+else
+	printf "\e[32mOverall Pass\e[0m\n"
+fi
+
+
+printf "\n8.2 Remove OS information from Login Banners\n"
+issue=$(egrep '(\\v|\\r|\\m|\\s)' /etc/issue)
+motd=$(egrep '(\\v|\\r|\\m|\\s)' /etc/motd)
+issuenet=$(egrep '(\\v|\\r|\\m|\\s)' /etc/issue.net)
+regex='(\\v|\\r|\\m|\\s)'
+counter=0
+#echo $issue
+printf "Checking /etc/issue:\n"
+if [[ $issue =~ $regex ]]
+then 
+	counter=$((counter+1))
+	printf "\033[33;31m FAIL \n"
+else
+	printf "\033[33;32m PASS \n"
+fi
+echo  -en "\e[0m"
+#echo $motd
+printf "Checking /etc/motd:\n"
+if [[ $motd =~ $regex ]]
+then 
+	counter=$((counter+1))
+	printf "\033[33;31m FAIL \n"
+else
+	printf "\033[33;32m PASS \n"
+
+fi
+echo  -en "\e[0m"
+#echo $issuenet
+printf "Checking /etc/issue.net:\n"
+if [[ $issuenet =~ $regex ]]
+then 
+	counter=$((counter+1))
+	printf "\033[33;31m FAIL \n"
+else
+	printf "\033[33;32m PASS \n"
+fi
+echo  -en "\e[0m"
+#echo $counter
+if [ $counter -gt 0 ]; then
+	printf "\e[31mOverall Fail\e[0m\n"
+	printf "Please run remediation\n"
+else
+	printf "\e[32mOverall Pass\e[0m\n"
+fi
