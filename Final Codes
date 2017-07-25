@@ -86,7 +86,6 @@ fi
 printf "\n7.5 Set Default Group for root Account\n"
 printf "Checking for root's default group\n"
 DGROUP=$(grep "^root:" /etc/passwd | cut -f4 -d:)
-echo $DGROUP
 if [ "$DGROUP" -eq 0 ]; then
 	printf "\033[33;32m PASS \n"
 else
@@ -146,7 +145,6 @@ echo  -en "\e[0m"
 printf "\n7.10 Verify No UID 0 Accounts Exist Other Than root\n"
 printf "Checking that no UID 0 exist besides root\n"
 VerifyUIDRoot=$(/bin/cat /etc/passwd | /bin/awk -F: '($3 == 0){print $1}')
-echo $VerifyUIDRoot
 if [ "$VerifyUIDRoot" = 'root' ]
 then
 	printf "\033[33;32m PASS \n"
