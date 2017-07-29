@@ -1,7 +1,9 @@
 #! /bin/bash
 clear
+bold=$(tput bold)
+normal=$(tput sgr0)
 
-printf "7.1 Set Password Expiration Days\n"
+printf "\n \033[0;30m${bold}7.1 Set Password Expiration Days${normal} \n\n"
 printf "Checking user account defaults: (Password Max Days)\n"
 #Checks the defaults for password max days, only gets the numbers
 maxDays=$(grep ^PASS_MAX_DAYS /etc/login.defs | grep -o '[0-9]*')
@@ -28,7 +30,7 @@ do
 done
 
 
-printf "\n7.2 Set Password Change Minimum Number of Days\n"
+printf "\n \033[0;30m${bold}7.2 Set Password Change Minimum Number of Days${normal} \n\n"
 #Checks the defaults for password min days, only gets the numbers
 printf "Checking user account defaults: (Password Min Days)\n"
 minDays=$(grep ^PASS_MIN_DAYS /etc/login.defs | grep -o '[0-9]*')
@@ -55,7 +57,7 @@ do
 done
 
 
-printf "\n7.3 Set Password Expiring Warning Days\n"
+printf "\n \033[0;30m${bold}7.3 Set Password Expiring Warning Days${normal} \n\n"
 printf "Checking user account defaults: (Password Exp Warning Days)\n"
 #Checks the defaults for password expiring warning days, only gets the numbers
 expDays=$(grep ^PASS_WARN_AGE /etc/login.defs | grep -o '[0-9]*')
@@ -82,7 +84,7 @@ do
 done
 
 
-printf "\n7.4 Disable User Accounts\n"
+printf "\n \033[0;30m${bold}7.4 Disable User Accounts${normal} \n\n"
 #Checks that users with UID of <1000, not named "sync", "shutdown", "halt" and "root" are locked and shells are set to /sbin/nologin
 RESULT=$(egrep -v "^\+" /etc/passwd | awk -F: '($1!="root" && $1!="sync" && $1!="shutdown" && $1!="halt" && $3<1000 && $7!="/usr/sbin/nologin" && $7!="/sbin/nologin" && $7!="/bin/false")')
 if [ -z $RESULT ]; then
@@ -93,7 +95,7 @@ else
 fi
 
 
-printf "\n7.5 Set Default Group for root Account\n"
+printf "\n \033[0;30m${bold}7.5 Set Default Group for root Account${normal} \n\n"
 printf "Checking for root's default group\n"
 #Checks whether GID = 0
 DGROUP=$(grep "^root:" /etc/passwd | cut -f4 -d:)
@@ -105,7 +107,7 @@ fi
 echo  -en "\e[0m"
 
 
-printf "\n7.6 Set Default umask for Users\n"
+printf "\n \033[0;30m${bold}7.6 Set Default umask for Users${normal} \n\n"
 printf "Checking umask for users\n "
 #Checks if Umask is set to 077
 if grep "umask 077" /etc/bashrc | grep "umask 077" /etc/profile.d/* >/dev/null; then
@@ -116,7 +118,7 @@ fi
 echo  -en "\e[0m"
 
 
-printf "\n7.7 Lock Inactive User Accounts\n"
+printf "\n \033[0;30m${bold}7.7 Lock Inactive User Accounts${normal} \n\n"
 #Checks if Inactive Days are more than or equal to 35
 printf "Checking for days until accounts deactivates\n"
 if useradd -D | grep INACTIVE=35 >/dev/null; then
@@ -127,7 +129,7 @@ fi
 echo  -en "\e[0m"
 
 
-printf "\n7.8 Ensure Password Fields are Not Empty\n"
+printf "\n \033[0;30m${bold}7.8 Ensure Password Fields are Not Empty${normal} \n\n"
 #Verifies that there are no accounts with empty password fields
 printf "Checking that password fields are not empty"
 PFieldsNEmpty= $(cat /etc/shadow | awk -F: '($2 == "" ) { print $1 " does not have a password "}')
@@ -140,7 +142,7 @@ fi
 echo  -en "\e[0m"
 
 
-printf "\n7.9 Verify No Legacy "+" Entries Exist in /etc/passwd, /etc/shadow and /etc/group files\n"
+printf "\n \033[0;30m${bold}7.9 Verify No Legacy "+" Entries Exist in /etc/passwd, /etc/shadow and /etc/group files${normal} \n\n"
 #Checks Legacy Entries for '^+:'
 printf "Checking that no Legacy Entries exist in etc/passwd, /etc/shadow and /etc/group files\n"
 PASSWD=$(grep '^+:' /etc/passwd)
@@ -158,7 +160,7 @@ fi
 echo  -en "\e[0m"
 
 
-printf "\n7.10 Verify No UID 0 Accounts Exist Other Than root\n"
+printf "\n \033[0;30m${bold}7.10 Verify No UID 0 Accounts Exist Other Than root${normal} \n\n"
 #Checks that only root has UID of 0
 printf "Checking that no UID 0 exist besides root\n"
 VerifyUIDRoot=$(/bin/cat /etc/passwd | /bin/awk -F: '($3 == 0){print $1}')
@@ -171,7 +173,7 @@ fi
 echo  -en "\e[0m"
 
 
-printf "\n7.11 Ensure root PATH Integrity\n"
+printf "\n \033[0;30m${bold}7.11 Ensure root PATH Integrity${normal} \n\n"
 #Checks that none of the path entries are empty
 printf "Checking root path integrity\n"
 if [ "`echo $PATH | grep :: `" != "" ]; then
@@ -217,7 +219,7 @@ shift
 done
 
 
-printf "\n7.12 Check Permissions on User Home Directories\n"
+printf "\n \033[0;30m${bold}7.12 Check Permissions on User Home Directories${normal} \n\n"
 #For loop to get accounts that can log in interactively to the system
 for RESULT in `cat /etc/passwd | egrep -v '(root|halt|sync|shutdown)' |awk -F: '($7!="/usr/sbin/nologin" && $7!="/sbin/nologin" && $7!="/bin/false") { print $6 }'`; do
 resultperm=$(ls -ld $RESULT)
@@ -248,7 +250,7 @@ fi
 done
 
 
-printf "\n7.13 Check User Dot File Permissions\n"
+printf "\n \033[0;30m${bold}7.13 Check User Dot File Permissions${normal} \n\n"
 #For loop to get hidden files in the user's home directory
 printf "Checking user dot file permissions\n"
 for dir in `cat /etc/passwd | egrep -v '(root|sync|halt|shutdown)' | awk -F: '($7 != "/sbin/nologin" && $7 != "/usr/sbin/nologin" && $7 != "/bin/false") { print $6 }'`; do
@@ -266,8 +268,6 @@ done
 done
 
 
-bold=$(tput bold)
-normal=$(tput sgr0)
 printf "\n \033[0;30m${bold}7.14 Checking for Existence and Permission of User .netrc Files${normal} \n\n" 
 
 #Determines the home directory of interactive user accounts
@@ -337,8 +337,7 @@ echo  -en "\e[0m \n"
 done
 done
 
-
-printf "\n7.15 Check for Presence of User .rhosts Files\n"
+printf "\n \033[0;30m${bold}7.15 Check for Presence of User .rhosts Files${normal} \n\n"
 #Get interactive user accounts
 printf "\033[0;30mChecking for Presence of User .rhosts Files \n"
 for dir in `/bin/cat /etc/passwd | /bin/egrep -v '(root|halt|sync|shutdown)' |/bin/awk -F: '($7 != "/sbin/nologin") { print $6 }'`; do
@@ -355,7 +354,7 @@ done
 done
 
 
-printf "\n7.16 Check Groups in /etc/passwd\n"
+printf "\n \033[0;30m${bold}7.16 Check Groups in /etc/passwd${normal} \n\n"
 #For every row in /etc/passwd
 for i in $(cat /etc/passwd | cut -d : -f 4 | sort -u); do 
 #Verifies GID defined in /etc/group
@@ -368,7 +367,7 @@ for i in $(cat /etc/passwd | cut -d : -f 4 | sort -u); do
 done
 
 
-printf "\n7.17 Check That Users Are Assigned Valid Home Directories and Home Directory Ownership is Correct\n"
+printf "\n \033[0;30m${bold}7.17 Check That Users Are Assigned Valid Home Directories and Home Directory Ownership is Correct${normal} \n\n"
 #In etc/passwd, check if home directory is defined in field no. 6. See if valid and exist
 cat /etc/passwd | awk -F : '{print $1, $3, $6}' | while read user uid dir; do 
 	if [ $uid -ge 1000 -a ! -d "$dir" -a $user != "nfsnobody" ]; then 
@@ -389,7 +388,7 @@ cat /etc/passwd | awk -F : '{print $1, $3, $6}' | while read user uid dir; do
 done
 
 
-printf "\n7.18 Check for Duplicate UIDs\n"
+printf "\n \033[0;30m${bold}7.18 Check for Duplicate UIDs${normal} \n\n"
 printf "Checking for duplicate UIDs\n"
 #Get etc/passwd file
 cat /etc/passwd| cut -f3 -d":" | sort -n | uniq -c | while read x ; do
@@ -406,7 +405,7 @@ fi
 done
 
 
-printf "\n7.19 Check for Duplicate GIDs\n"
+printf "\n \033[0;30m${bold}7.19 Check for Duplicate GIDs${normal} \n\n"
 printf "Checking for duplicate GIDs\n"
 #Get etc/group file
 cat /etc/group | cut -f3 -d":" | sort -n | uniq -c | while read x ; do
@@ -423,7 +422,7 @@ fi
 done
 
 
-printf "\n7.20 Check That Reserved UIDs Are Assigned to only System Accounts\n"
+printf "\n \033[0;30m${bold}7.20 Check That Reserved UIDs Are Assigned to only System Accounts${normal} \n\n"
 #All System Accounts
 checkUsers="root bin daemon adm lp sync shutdown halt mail news uucp operator games gopher ftp nobody nscd vcsa rpc nscd vcsa rpc mailnull smmsp pcap ntp dbus avahi sshd rpcuser nfsnobody haldaemon avahi-autoipd distcache apache oprofile webalizer dovecot squid named xfs gdm sabayon usbmuxd rtkit abrt saslauth pulse postfix tcpdump"
 #Checks that reserved UIDs are assigned to system accounts
@@ -440,7 +439,7 @@ for tUser in ${checkUsers}
 done
 
 
-printf "\n7.21 Check for Duplicate User Names\n"
+printf "\n \033[0;30m${bold}7.21 Check for Duplicate User Names${normal} \n\n"
 #Get etc/passwd file
 cat /etc/passwd | cut -f1 -d":" | /bin/sort -n | /usr/bin/uniq -c | while read x ; do
 [ -z "${x}" ] && break
@@ -455,8 +454,7 @@ printf "\e[32mPass - ($2)\e[0m\n"
 fi
 done
 
-
-printf "\n7.22 Check for Duplicate Group Names\n"
+printf "\n \033[0;30m${bold}7.22 Check for Duplicate Group Names${normal} \n\n"
 #Get etc/group file
 cat /etc/group | cut -f1 -d":" | /bin/sort -n | /usr/bin/uniq -c | while read x ; do
 [ -z "${x}" ] && break
@@ -472,7 +470,7 @@ fi
 done
 
 
-printf "\n7.23 Check for Presence of User .forward Files\n"
+printf "\n \033[0;30m${bold}7.23 Check for Presence of User .forward Files${normal} \n\n"
 #Get users then check for the presence of .forward files
 for dir in `/bin/cat /etc/passwd| /bin/awk -F: '{ print $6 }'`; do
 if [ ! -h "$dir/.forward" -a -f "$dir/.forward" ]; then
@@ -483,7 +481,7 @@ fi
 done
 
 
-printf "\n8.1 Set Warning Banner for Standard Login Services\n"
+printf "\n \033[0;30m${bold}8.1 Set Warning Banner for Standard Login Services${normal} \n\n"
 #Set counter to 0 and cut user and group of /etc/motd, /etc/issue and /etc/issue.net
 counter=0
 motdper=$(ls -l /etc/motd | cut -d " " -f 3 )
@@ -539,7 +537,7 @@ else
 fi
 
 
-printf "\n8.2 Remove OS information from Login Banners\n"
+printf "\n \033[0;30m${bold}8.2 Remove OS information from Login Banners${normal} \n\n"
 #Greps if match 3 files
 issue=$(egrep '(\\v|\\r|\\m|\\s)' /etc/issue)
 motd=$(egrep '(\\v|\\r|\\m|\\s)' /etc/motd)
