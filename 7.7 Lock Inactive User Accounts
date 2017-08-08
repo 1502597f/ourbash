@@ -1,7 +1,9 @@
 #! /bin/bash
 
-clear
-printf "Checking for days until accounts deactivates \n"
+bold=$(tput bold)
+normal=$(tput sgr0)
+printf "\n \033[0;30m${bold}Checking for days until accounts deactivates${normal} \n\n"
+
 if useradd -D | grep INACTIVE=35 >/dev/null; then
 	printf "\033[33;32m PASS \n"
 else
