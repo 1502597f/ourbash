@@ -1,6 +1,8 @@
 #! /bin/bash
 
-printf "Checking umask for users... \n "
+bold=$(tput bold)
+normal=$(tput sgr0)
+printf "\n \033[0;30m${bold}Checking umask for users...${normal} \n\n "
 
 if  grep "umask 077" /etc/bashrc | grep "umask 077" /etc/profile.d/* >/dev/null ;
 then
