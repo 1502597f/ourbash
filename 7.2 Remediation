@@ -16,9 +16,9 @@ for i in "${list[@]}"
 do
 	day=$(chage -l $i | grep "Minimum number" | cut -d : -f 2)
 	if [ $day -ge 7 ]; then 
-		printf "\e[32mNo remediation is needed\e[0m\n"
+		printf "\e[32mNo remediation is needed for $i\e[0m\n"
 	else
 		chage --mindays 7 $i  
-		printf "\e[32mRemediation has been completed\e[0m\n"
+		printf "\e[32mRemediation has been completed for $i\e[0m\n"
 	fi
 done
